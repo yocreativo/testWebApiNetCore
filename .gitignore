@@ -1,0 +1,28 @@
+# Archivos de compilación
+api_net_core_c_sharp/WebApplication1/WebApplication1/bin/
+api_net_core_c_sharp/WebApplication1/WebApplication1/obj/
+TestProject1/TestProject1/bin/
+TestProject1/TestProject1/obj/
+
+# Archivos de configuración de usuario de Visual Studio
+.vs/
+*.sln.ide
+
+# Archivos temporales de Visual Studio
+*.user
+*.suo
+*.userprefs
+
+# Archivos de logs
+*.log
+
+# Archivos de caché
+*.cache
+
+# Otros archivos generados
+*.db
+*.db-journal
+*.pdb
+*.mdb
+*.opendb
+*.opendb-journal
