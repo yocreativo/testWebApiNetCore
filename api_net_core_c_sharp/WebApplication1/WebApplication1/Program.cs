@@ -1,9 +1,34 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Data;
+using WebApplication1.Middleware;
+using WebApplication1.Service;
 
 var AllowAllOrigins = "";
 
 var builder = WebApplication.CreateBuilder(args);
+
+//tokens
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "tu_dominio_o_nombre_de_emisor",
+            ValidAudience = "tu_dominio_o_nombre_de_audiencia",
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("tu_clave_secreta"))
+        };
+    });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +55,8 @@ builder.Services.AddCors(options => {
     });
 });
 
+builder.Services.AddScoped<ServiceSP>();
+
 var app = builder.Build();
 
 //En el modo de desarrollo se usa el Swagger
@@ -42,6 +69,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(AllowAllOrigins);
+
+// Agregar el middleware de manejo de errores
+//app.UseMiddleware<ErrorHandlingMiddleware>();
+
+//app.UseMiddleware<JwtMiddleware>();
+
+//app.UseForwardedHeaders(new ForwardedHeadersOptions
+//{
+//    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+//});
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApplication1.Controllers;
 using WebApplication1.Data;
@@ -27,6 +28,8 @@ public class MarcasAutosControllerTests
         if (existe == null)
         {
             _context.marcasAutos.Add(new MarcasAutos { IdMarca = 1, Marca = "Toyota" });
+            _context.marcasAutos.Add(new MarcasAutos { IdMarca = 2, Marca = "Ford" });
+            _context.marcasAutos.Add(new MarcasAutos { IdMarca = 3, Marca = "Honda" });
             _context.SaveChanges();
         }
         //Creo la instancia del context con la Base de Datos en Memoria
@@ -43,6 +46,19 @@ public class MarcasAutosControllerTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetMarcasAutos_ReturnsOkResult_WhenMarcaExists()
+    {
+        //Act
+        //Se ejecuta el método con el
+        //controller instanciado a un
+        //entorno de prueba con base de Datos en Memoria
+        var result = await _controller.GetMarcasAutos(); // Devuelve la colección entera que existe en la BD en memoria
+
+        // Se comprueba el tipo devuelto por el método GetMarcasAutos
+        Assert.IsType<ActionResult<IEnumerable<MarcasAutos>>>(result);
     }
 
     [Fact]
